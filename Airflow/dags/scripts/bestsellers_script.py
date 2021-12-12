@@ -1,6 +1,9 @@
 def run_zipfile_downloader(**context):
     '''
     Download the requested zip file into the specified S3 bucket.
+    smart_open is a Python 3 library for efficient streaming of very
+    large files from/to storages such as S3.
+    It handles partial downloads and uses multipart uplaod mechanism.
     Use execution time as partition key.
         Parameters:
             bucket_dir: str
