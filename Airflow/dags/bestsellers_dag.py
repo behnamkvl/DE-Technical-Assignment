@@ -26,11 +26,11 @@ with DAG(
     max_active_runs=1,
 ) as dag:
 
+    # configuration for each data source is described in the yml file
     with open("dags/yml/bestsellers_data_sources.yml", "r") as yaml_file:
         sources = yaml.safe_load(yaml_file)
 
-    list_download_tasks = []
-    list_create_partition_tasks = []
+    # this list holds insert_* tasks
     list_insert_data_to_redshift_tasks = []
 
     for source in sources:
@@ -46,8 +46,8 @@ with DAG(
             },
             provide_context=True,
         )
-        list_download_tasks.append(run_zipfile_downloader_task)
 
+        # using Jinja filters to create partition key from ts_nodash
         partition_clause = f'{source["partition_key"]}=' + \
             "{% set sliced_ts_nodash = ts_nodash | string | replace('T', '') %}{{ sliced_ts_nodash[:10] }}"
         location = f'{source["bucket_dir"]}{partition_clause}/'
@@ -67,7 +67,6 @@ with DAG(
             },
             provide_context=True,
         )
-        list_create_partition_tasks.append(run_create_partition_on_redshift)
 
         run_insert_data_to_redshift = PythonOperator(
             task_id='insert_' + source["name"],
