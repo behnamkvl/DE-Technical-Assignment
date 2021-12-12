@@ -6,6 +6,7 @@ A pipeline for extracting data from [JSON files](http://jmcauley.ucsd.edu/data/a
 - Terraform
 - AWS Account
 - Python 3
+- smart_open
   
 ## Setup (Airflow on Docker in EC2 + GitLab's CI/CD)
 Airflow will be installed inside Docker container, which will be deployed in Amazon's EC2. For continuous integration and continuous deployment (CI/CD), GitLab is being used.
@@ -28,7 +29,7 @@ Airflow will be installed inside Docker container, which will be deployed in Ama
   1. Run content of `sql/bestsellers.sql` on your Redshift cluster. It'll create two schema (internal, external) and two tables (reviews, medadata) inside each of them.
 ## Description
 ### Airflow Dag
-This pipeline has a single Dag that has 7 tasks inside it. 
+This pipeline has a single Dag that has 7 tasks inside itself. 
 ![dags](./pics/dags.png)
 Here is a description for each kind of tasks:
 - `download_*` 
