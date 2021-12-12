@@ -1,0 +1,59 @@
+default:
+  image: ubuntu:latest
+
+deploy-prod:
+  only:
+    - master
+  stage: deploy
+  before_script:
+    - ls -la
+    - pwd
+    - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
+    - eval $(ssh-agent -s)
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - cat $SSH_KEY_EC2
+    - echo "$(cat $SSH_KEY_EC2)" >> ~/.ssh/ssh-key.pem
+    - chmod 400 ~/.ssh/ssh-key.pem
+    - cat ~/.ssh/ssh-key.pem
+    - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
+    - apt-get update -y
+    - apt-get -y install rsync
+  script:
+    - >- 
+      ssh -i ~/.ssh/ssh-key.pem ubuntu@$EC2_ADDRESS \
+      'git config --global --replace-all user.name "Behnam Vakili"
+      && git config --global --replace-all user.email "behnam.vr@gmail.com"
+      '
+    - >-
+      ssh -i ~/.ssh/ssh-key.pem ubuntu@$EC2_ADDRESS \
+      '
+      if [ -d airflow-pipeline ];
+      then echo heloooo
+      && cd airflow-pipeline
+      && git status
+      && git restore .env
+      && git pull --rebase
+      && git status
+      && sed -i s:%AIRFLOW_UID%:'"$(id -u)"':g .env
+      && sed -i s:%AIRFLOW_GID%:0:g .env
+      && sed -i s:%_AIRFLOW_WWW_USER_USERNAME%:'"$_AIRFLOW_WWW_USER_USERNAME"':g .env
+      && sed -i s:%_AIRFLOW_WWW_USER_PASSWORD%:'"$_AIRFLOW_WWW_USER_PASSWORD"':g .env;
+      else  echo $(ls) && echo currentpath && echo $(pwd)
+      && git clone https://'"$GITLAB_USERNAME"':'"$GITLAB_PASSWORD"'@gitlab.com/behnam.vr/airflow-pipeline.git
+      && cd airflow-pipeline 
+      && ls -la 
+      && chmod 777 logs
+      && sed -i s:%AIRFLOW_UID%:'"$(id -u)"':g .env
+      && sed -i s:%AIRFLOW_GID%:0:g .env
+      && sed -i s:%_AIRFLOW_WWW_USER_USERNAME%:'"$_AIRFLOW_WWW_USER_USERNAME"':g .env
+      && sed -i s:%_AIRFLOW_WWW_USER_PASSWORD%:'"$_AIRFLOW_WWW_USER_PASSWORD"':g .env
+      && sudo docker-compose up airflow-init; 
+      fi;'
+    - >-
+      ssh -i ~/.ssh/ssh-key.pem ubuntu@$EC2_ADDRESS \
+      'cd airflow-pipeline &&
+      if [ docker ps | grep -q keyword ]; 
+      then sudo docker-compose down && sudo docker-compose up -d --build; 
+      else sudo docker-compose up -d --build; 
+      fi;'
