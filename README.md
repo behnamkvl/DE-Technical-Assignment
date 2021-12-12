@@ -12,7 +12,7 @@ Airflow will be installed inside Docker container, which will be deployed in Ama
 - **EC2**
   1. Use the files inside Terraform directory to Set up EC2 server with installed Docker and docker-compose.
 - **Airflow**
-  1. Create new repository on GitLab, and push this repository there.
+  1. Create new repository on GitLab, and push Aiflow directory of this repository there.
   2. On your GitLab's project page, open Settings > CI/CD > Repository Variables. Configure several variables:<br>
        * _AIRFLOW_WWW_USER_PASSWORD -> Arbitrary password for Airflow (Variable)<br>
        * _AIRFLOW_WWW_USER_USERNAME -> Arbitrary username for Airflow (Variable)<br>
