@@ -42,6 +42,7 @@ Here is a description for each kind of tasks:
     > - Begin an upload before you know the final object size - You can upload an object as you are creating it.
     > <br> [Refrence](https://docs.aws.amazon.com/AmazonS3/latest/userguide/mpuoverview.html)
      
+    ![dags](./pics/s3-2.png)
     ![dags](./pics/s3.png)
 
 - `partition_*` 
