@@ -10,7 +10,7 @@ A pipeline for extracting data from [JSON files](http://jmcauley.ucsd.edu/data/a
 ## Setup (Airflow on Docker in EC2 + GitLab's CI/CD)
 Airflow will be installed inside Docker container, which will be deployed in Amazon's EC2. For continuous integration and continuous deployment (CI/CD), GitLab is being used.
 - **EC2**
-  1. Use the files inside Terraform directory to Set up EC2 server with installed Docker and docker-compose. Choose ubuntu and with port 8080 open.
+  1. Use the files inside Terraform directory to Set up EC2 server with installed Docker and docker-compose.
 - **Airflow**
   1. Create new repository on GitLab, and push this repository there.
   2. On your GitLab's project page, open Settings > CI/CD > Repository Variables. Configure several variables:<br>
