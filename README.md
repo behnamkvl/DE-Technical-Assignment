@@ -9,9 +9,9 @@ A pipeline for extracting data from [JSON files](http://jmcauley.ucsd.edu/data/a
   
 ## Setup (Airflow on Docker in EC2 + GitLab's CI/CD)
 Airflow will be installed inside Docker container, which will be deployed in Amazon's EC2. For continuous integration and continuous deployment (CI/CD), GitLab is being used.
-- EC2
+- **EC2**
   1. Use the files inside Terraform directory to Set up EC2 server with installed Docker and docker-compose. Choose ubuntu and with port 8080 open.
-- Airflow
+- **Airflow**
   1. Create new repository on GitLab, and push this repository there.
   2. On your GitLab's project page, open Settings > CI/CD > Repository Variables. Configure several variables:<br>
        * _AIRFLOW_WWW_USER_PASSWORD -> Arbitrary password for Airflow (Variable)<br>
@@ -24,7 +24,7 @@ Airflow will be installed inside Docker container, which will be deployed in Ama
   4. Open gitlab-ci.yml, change line 25 and 26 with your email (that registered on GitLab) and Name.
   5. Run CI/CD pipeline.
   6. Open the Airflow UI in browser on EC2_IP_ADDRESS:8080
-- Redshift
+- **Redshift**
   1. Run content of `sql/bestsellers.sql` on your Redshift cluster. It'll create two schema (internal, external) and two tables (reviews, medadata) inside each of them.
 ## Description
 ### Airflow Dag
