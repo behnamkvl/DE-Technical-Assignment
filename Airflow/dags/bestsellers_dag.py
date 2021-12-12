@@ -34,6 +34,7 @@ with DAG(
     list_insert_data_to_redshift_tasks = []
 
     for source in sources:
+        # download zip files and store them into S3
         run_zipfile_downloader_task = PythonOperator(
             task_id='download_' + source["name"],
             python_callable=run_zipfile_downloader,
@@ -47,6 +48,7 @@ with DAG(
             provide_context=True,
         )
 
+        # Creating new partition for recently downloaded file
         # using Jinja filters to create partition key from ts_nodash
         partition_clause = f'{source["partition_key"]}=' + \
             "{% set sliced_ts_nodash = ts_nodash | string | replace('T', '') %}{{ sliced_ts_nodash[:10] }}"
@@ -68,6 +70,7 @@ with DAG(
             provide_context=True,
         )
 
+        # inserting data into Redshift Cluster
         run_insert_data_to_redshift = PythonOperator(
             task_id='insert_' + source["name"],
             python_callable=run_query_on_redshift,
@@ -104,6 +107,7 @@ with DAG(
 
         run_zipfile_downloader_task >> run_create_partition_on_redshift >> run_insert_data_to_redshift
 
+    # updating the materialized view to incluce fresh data
     run_refresh_materialized_view_on_redshift = PythonOperator(
         task_id='run_refresh_materialized_view_on_redshift',
         python_callable=run_query_on_redshift,
