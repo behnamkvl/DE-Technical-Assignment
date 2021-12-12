@@ -11,7 +11,7 @@ A pipeline for extracting data from [JSON files](http://jmcauley.ucsd.edu/data/a
 Airflow will be installed inside Docker container, which will be deployed in Amazon's EC2. For continuous integration and continuous deployment (CI/CD), GitLab is being used.
 - EC2
   1. Use the files inside Terraform directory to Set up EC2 server with installed Docker and docker-compose. Choose ubuntu and with port 8080 open.
-- Aiflow
+- Airflow
   1. Create new repository on GitLab, and push this repository there.
   2. On your GitLab's project page, open Settings > CI/CD > Repository Variables. Configure several variables:<br>
        * _AIRFLOW_WWW_USER_PASSWORD -> Arbitrary password for Airflow (Variable)<br>
@@ -54,7 +54,7 @@ Here is a description for each kind of tasks:
 - `run_refresh_materialized_view_on_redshift` 
   
   This is a simple task that runs a query on Redshift cluster to update the already created materialized view (join between review & metadata).
-  Sample Result:
+  Sample row of the result:
 ```
 Name          |Value                                                                  |
 --------------+-----------------------------------------------------------------------+
